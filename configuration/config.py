@@ -4,11 +4,11 @@ from pathlib import Path
 from tomlkit import document, table, comment, dumps
 class Config:
     def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list): 
-        base = "cluster/pixstor/class/"
+        self.base = Path('/', 'cluster', 'pixstor', 'class', class_code)
         self.class_code = class_code
-        self.bin = Path(f"{base}{bin}")
-        self.data = Path(f"{base}{data}")
-        self.submissions = Path(f"{base}{submissions}")
+        self.bin = self.base / bin
+        self.data = self.base / data
+        self.submissions = self.base / submissions
         self.api_prefix = api_prefix
         self.api_token = api_token
         self.course_ids = course_ids
@@ -16,7 +16,6 @@ class Config:
     def prepare_toml_doc():
         doc = document()
 
-        # [general] section
         general = table()
         general.add(comment(" General MUCSv2 properties "))
         general.add(comment("   the class code you'll be backing up from."))
@@ -25,7 +24,6 @@ class Config:
     
         doc["general"] = general
 
-        # [paths] section
         paths = table()
         paths.add(comment(" MUCSv2 is dependent on a set of directories. You can optionally configure the name of these directories."))
         paths.add(comment("    This directory stores the necessary (and optional) scripts needed for MUCSv2."))
@@ -37,7 +35,6 @@ class Config:
         
         doc["paths"] = paths
 
-        # [canvas] section
         canvas = table()
 
         canvas.add(comment(" MUCSv2 uses Canvas as a remote ''database''. Your assignments, groups, and other data will be retrieved from there."))
@@ -53,6 +50,16 @@ class Config:
         canvas.add(comment(" The Canvas course IDs associated with your course."))
         canvas.add("course_ids", [-1, -2])
         doc["canvas"] = canvas
+
+        github_repos = table()
+        github_repos.add(comment(" MUCSv2 pulls several modules from GitHub. You shouldn't need to change these, but you may use forks/different versions. "))
+        github_repos.add(comment( "GenGraderTable"))
+        github_repos.add("gen_grader_table", "https://github.com/Mizzou-CS-Core/GenGraderTable.git")
+        github_repos.add("mucsmake", "https://github.com/Mizzou-CS-Core/MUCSMake.git")
+        github_repos.add("gen_assignment_table", "https://github.com/Mizzou-CS-Core/LabWindowGen.git")
+
+
+
 
         with open("config.toml", 'w') as f:
             f.write(dumps(doc))
