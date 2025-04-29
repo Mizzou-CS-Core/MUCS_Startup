@@ -2,6 +2,7 @@ import os
 import tomlkit
 from pathlib import Path
 from tomlkit import document, table, comment, dumps
+from canvas_lms_api import CanvasClient
 class Config:
     def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list): 
         self.base = Path('/', 'cluster', 'pixstor', 'class', class_code)
@@ -12,6 +13,7 @@ class Config:
         self.api_prefix = api_prefix
         self.api_token = api_token
         self.course_ids = course_ids
+        self.canvas_client = CanvasClient(url_base=api_prefix, token=api_token)
     @staticmethod
     def prepare_toml_doc():
         doc = document()

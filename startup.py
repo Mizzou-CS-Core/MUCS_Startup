@@ -2,6 +2,8 @@ import sys
 import os
 from configuration.config import Config
 from git import Repo
+
+from canvas_lms_api import CanvasClient, Course
     
 
 def initialize_bin(config: Config):
@@ -12,6 +14,11 @@ def initialize_bin(config: Config):
 
 def initialize_course(config: Config):
     config.base.mkdir(parents=True, exist_ok=False)
+    canvas_courses = list()
+    for course_id in config.course_ids:
+        canvas_courses.append(config.canvas_client._courses.get_course(course_id=course_id))
+    for course in canvas_courses:
+        print(course.id)
     
 
 def main():
