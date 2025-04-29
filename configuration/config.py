@@ -1,0 +1,84 @@
+import os
+import tomlkit
+from pathlib import Path
+from tomlkit import document, table, comment, dumps
+class Config:
+    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list): 
+        base = "cluster/pixstor/class/"
+        self.class_code = class_code
+        self.bin = Path(f"{base}{bin}")
+        self.data = Path(f"{base}{data}")
+        self.submissions = Path(f"{base}{submissions}")
+        self.api_prefix = api_prefix
+        self.api_token = api_token
+        self.course_ids = course_ids
+    @staticmethod
+    def prepare_toml_doc():
+        doc = document()
+
+        # [general] section
+        general = table()
+        general.add(comment(" General MUCSv2 properties "))
+        general.add(comment("   the class code you'll be backing up from."))
+        general.add(comment(" valid options: cs1050, cs2050"))
+        general.add("class_code", "")
+    
+        doc["general"] = general
+
+        # [paths] section
+        paths = table()
+        paths.add(comment(" MUCSv2 is dependent on a set of directories. You can optionally configure the name of these directories."))
+        paths.add(comment("    This directory stores the necessary (and optional) scripts needed for MUCSv2."))
+        paths.add("bin", "bin")
+        paths.add(comment("    This directory stores look-up tables related to Canvas data and other configuration properties."))
+        paths.add("data", "data")
+        paths.add(comment("    This directory stores student submissions related to the assignments you configured."))
+        paths.add("submissions", "submissions")
+        
+        doc["paths"] = paths
+
+        # [canvas] section
+        canvas = table()
+
+        canvas.add(comment(" MUCSv2 uses Canvas as a remote ''database''. Your assignments, groups, and other data will be retrieved from there."))
+        canvas.add(comment(" You can associate more than one Canvas course with your MUCSv2 course."))
+        canvas.add(comment("    API Prefix for connecting to Canvas"))
+        canvas.add(comment("    This shouldn't need to change for MUCS purposes"))
+        canvas.add("api_prefix", "https://umsystem.instructure.com/api/v1/")
+        canvas.add(comment(" API Token associated with your Canvas user"))
+        canvas.add(comment(
+            " https://community.canvaslms.com/t5/Canvas-Basics-Guide/How-do-I-manage-API-access-tokens-in-my-user-account/ta-p/615312"))
+        canvas.add(comment(" You should keep this secret."))
+        canvas.add("api_token", "")
+        canvas.add(comment(" The Canvas course IDs associated with your course."))
+        canvas.add("course_ids", [-1, -2])
+        doc["canvas"] = canvas
+
+        with open("config.toml", 'w') as f:
+            f.write(dumps(doc))
+    @classmethod
+    def get_config(cls):
+        if not os.path.exists("config.toml"):
+            cls.prepare_toml_doc()
+            return None
+        with open("config.toml", 'r') as f:
+            content = f.read()
+        doc = tomlkit.parse(content)
+
+        # Extract values from the TOML document
+        general = doc.get('general', {})
+        paths = doc.get('paths', {})
+        canvas = doc.get('canvas', {})
+
+        return Config(
+            class_code=general.get('class_code', ''),
+            bin=paths.get('bin', 'bin'),
+            data=paths.get('data', 'data'),
+            submissions=paths.get('submissions', ''),
+            api_prefix=canvas.get('api_prefix', ''),
+            api_token=canvas.get('api_token', ''),
+            course_ids=canvas.get('course_ids', [])
+        )
+
+
+    
