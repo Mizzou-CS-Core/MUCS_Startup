@@ -50,15 +50,9 @@ sql_statements = [
     );"""
 ]
 
-def get_cursor(config: Config):
-    try:
-        with sqlite3.connect(config.sqlite_db_path) as conn:
-            return conn.cursor()
-    except sqlite3.OperationalError as e:
-        logger.error(f"{e}")
 
-def init_database(config: Config):
-    logger.info(f"$init_database: Initializing {config.sqlite_db_path} as SQLite3 DB")
+def initialize_database(config: Config):
+    logger.debug(f"Initializing {config.sqlite_db_path} as SQLite3 DB")
     try:
         with sqlite3.connect(config.sqlite_db_path) as conn:
             cursor = conn.cursor()
