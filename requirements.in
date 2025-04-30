@@ -2,3 +2,5 @@ tomlkit
 gitpython
 git+https://github.com/Mizzou-CS-Core/CanvasRequestLibrary.git#egg=canvas_lms_api
 colorama
+colorlog
+git+https://github.com/Mizzou-CS-Core/LabWindowGen.git@sql-integration#egg=gen_assignment_window

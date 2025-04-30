@@ -5,12 +5,18 @@
 #    pip-compile requirements.in
 #
 canvas-lms-api @ git+https://github.com/Mizzou-CS-Core/CanvasRequestLibrary.git
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   gen-assignment-window
 certifi==2025.4.26
     # via requests
 charset-normalizer==3.4.1
     # via requests
 colorama==0.4.6
+    # via -r requirements.in
+colorlog==6.9.0
+    # via -r requirements.in
+gen-assignment-window @ git+https://github.com/Mizzou-CS-Core/LabWindowGen.git@sql-integration
     # via -r requirements.in
 gitdb==4.0.12
     # via gitpython
