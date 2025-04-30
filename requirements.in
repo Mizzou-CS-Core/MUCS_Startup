@@ -1,3 +1,4 @@
 tomlkit
 gitpython
 git+https://github.com/Mizzou-CS-Core/CanvasRequestLibrary.git#egg=canvas_lms_api
+colorama

@@ -6,11 +6,23 @@
 #
 canvas-lms-api @ git+https://github.com/Mizzou-CS-Core/CanvasRequestLibrary.git
     # via -r requirements.in
+certifi==2025.4.26
+    # via requests
+charset-normalizer==3.4.1
+    # via requests
+colorama==0.4.6
+    # via -r requirements.in
 gitdb==4.0.12
     # via gitpython
 gitpython==3.1.44
     # via -r requirements.in
+idna==3.10
+    # via requests
+requests==2.32.3
+    # via canvas-lms-api
 smmap==5.0.2
     # via gitdb
 tomlkit==0.13.2
     # via -r requirements.in
+urllib3==2.4.0
+    # via requests
