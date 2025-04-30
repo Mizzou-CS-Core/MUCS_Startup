@@ -4,7 +4,7 @@ from pathlib import Path
 from tomlkit import document, table, comment, dumps
 from canvas_lms_api import CanvasClient
 class Config:
-    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list): 
+    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list, sqlite_db: str): 
         self.base = Path('/', 'cluster', 'pixstor', 'class', class_code)
         self.class_code = class_code
         self.bin = self.base / bin
@@ -14,6 +14,7 @@ class Config:
         self.api_token = api_token
         self.course_ids = course_ids
         self.canvas_client = CanvasClient(url_base=api_prefix, token=api_token)
+        self.sqlite_db = self.class_code if sqlite_db == "" else sqlite_db
     @staticmethod
     def prepare_toml_doc():
         doc = document()
@@ -23,6 +24,10 @@ class Config:
         general.add(comment("   the class code you'll be backing up from."))
         general.add(comment(" valid options: cs1050, cs2050"))
         general.add("class_code", "")
+        general.add(comment(" The name of the SQLite database. "))
+        general.add(comment("If left blank, it'll default to the class code you set."))
+        general.add("sqlite_db", "")
+
     
         doc["general"] = general
 
@@ -59,6 +64,7 @@ class Config:
         github_repos.add("gen_grader_table", "https://github.com/Mizzou-CS-Core/GenGraderTable.git")
         github_repos.add("mucsmake", "https://github.com/Mizzou-CS-Core/MUCSMake.git")
         github_repos.add("gen_assignment_table", "https://github.com/Mizzou-CS-Core/LabWindowGen.git")
+        doc['github_repos'] = github_repos
 
 
 
@@ -78,6 +84,7 @@ class Config:
         general = doc.get('general', {})
         paths = doc.get('paths', {})
         canvas = doc.get('canvas', {})
+        github_repos = doc.get('github_repos', {})
 
         return Config(
             class_code=general.get('class_code', ''),
@@ -86,7 +93,8 @@ class Config:
             submissions=paths.get('submissions', ''),
             api_prefix=canvas.get('api_prefix', ''),
             api_token=canvas.get('api_token', ''),
-            course_ids=canvas.get('course_ids', [])
+            course_ids=canvas.get('course_ids', []),
+            sqlite_db=general.get('sqlite_db', '')
         )
 
 
