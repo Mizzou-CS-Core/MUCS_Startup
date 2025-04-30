@@ -1,5 +1,6 @@
 import sqlite3
 from utilities.logger import info, warning, error
+from configuration.config import Config
 
 sql_statements = [
     """CREATE TABLE IF NOT EXISTS mucsv2_course (
@@ -50,15 +51,15 @@ sql_statements = [
 
 
 def init_database(config: Config):
-    db_name = f"{config.data}{config.sqlite_db}.db"
+    db_name = f"{config.data}/{config.sqlite_db}.db"
     print(db_name)
     try:
         with sqlite3.connect(db_name) as conn:
-            cursor = conn.cursor
+            cursor = conn.cursor()
             for statement in sql_statements:
                 cursor.execute(statement)
             conn.commit()
 
     except sqlite3.OperationalError as e:
-        error(f"Failed to open database: {e}")
+        error(f"{e}")
 
