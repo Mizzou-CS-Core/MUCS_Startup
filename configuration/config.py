@@ -15,6 +15,7 @@ class Config:
         self.course_ids = course_ids
         self.canvas_client = CanvasClient(url_base=api_prefix, token=api_token)
         self.sqlite_db = self.class_code if sqlite_db == "" else sqlite_db
+        self.sqlite_db_path = f"{self.data}/{self.sqlite_db}.db"
     @staticmethod
     def prepare_toml_doc():
         doc = document()
