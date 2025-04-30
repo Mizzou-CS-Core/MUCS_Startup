@@ -3,8 +3,17 @@ import tomlkit
 from pathlib import Path
 from tomlkit import document, table, comment, dumps
 from canvas_lms_api import CanvasClient
+import logging
+
+logger = logging.getLogger(__name__)
+
+class GitHubPaths:
+    def __init__(self, gen_grader_table, mucsmake, gen_assignment_table):
+        self.gen_grader_table = gen_grader_table
+        self.mucsmake = mucsmake
+        self.gen_assignment_table = gen_assignment_table
 class Config:
-    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list, sqlite_db: str): 
+    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list, sqlite_db: str, githubpaths: GitHubPaths): 
         self.base = Path('/', 'cluster', 'pixstor', 'class', class_code)
         self.class_code = class_code
         self.bin = self.base / bin
@@ -16,6 +25,7 @@ class Config:
         self.canvas_client = CanvasClient(url_base=api_prefix, token=api_token)
         self.sqlite_db = self.class_code if sqlite_db == "" else sqlite_db
         self.sqlite_db_path = f"{self.data}/{self.sqlite_db}.db"
+        self.githubpaths = githubpaths
     @staticmethod
     def prepare_toml_doc():
         doc = document()
@@ -62,22 +72,21 @@ class Config:
         github_repos = table()
         github_repos.add(comment(" MUCSv2 pulls several modules from GitHub. You shouldn't need to change these, but you may use forks/different versions. "))
         github_repos.add(comment( "GenGraderTable"))
-        github_repos.add("gen_grader_table", "https://github.com/Mizzou-CS-Core/GenGraderTable.git")
+        github_repos.add("gen_grader_table", "https://github.com/Mizzou-CS-Core/GenGraderTable.git@sql_integration")
         github_repos.add("mucsmake", "https://github.com/Mizzou-CS-Core/MUCSMake.git")
         github_repos.add("gen_assignment_table", "https://github.com/Mizzou-CS-Core/LabWindowGen.git")
         doc['github_repos'] = github_repos
-
-
-
 
         with open("config.toml", 'w') as f:
             f.write(dumps(doc))
     @classmethod
     def get_config(cls):
         if not os.path.exists("config.toml"):
+            logger.warning("An existing configuration file did not exist.")
             cls.prepare_toml_doc()
             return None
         with open("config.toml", 'r') as f:
+            logger.info("Reading config.toml into memory")
             content = f.read()
         doc = tomlkit.parse(content)
 
@@ -86,7 +95,7 @@ class Config:
         paths = doc.get('paths', {})
         canvas = doc.get('canvas', {})
         github_repos = doc.get('github_repos', {})
-
+        github = GitHubPaths(gen_grader_table=github_repos.get('gen_grader_table'), mucsmake=github_repos.get('mucsmake'), gen_assignment_table=github_repos.get('gen_assignment_table'))
         return Config(
             class_code=general.get('class_code', ''),
             bin=paths.get('bin', 'bin'),
@@ -95,7 +104,8 @@ class Config:
             api_prefix=canvas.get('api_prefix', ''),
             api_token=canvas.get('api_token', ''),
             course_ids=canvas.get('course_ids', []),
-            sqlite_db=general.get('sqlite_db', '')
+            sqlite_db=general.get('sqlite_db', ''),
+            githubpaths=github
         )
 
 

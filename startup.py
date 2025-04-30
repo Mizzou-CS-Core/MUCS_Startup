@@ -6,7 +6,7 @@ import logging
 from configuration.config import Config
 from git import Repo
 from database.init import init_database
-from data.initialize_assignment_table import initialize_assignment_table
+from data.assignment_table import initialize_assignment_table, download_table_git_repo
 
 from colorlog import ColoredFormatter
 
@@ -33,13 +33,17 @@ logger = logging.getLogger(__name__)
 
 
 def initialize_bin(config: Config):
+    logger.info(f"$initialize_bin: Creating {config.bin}")
+    config.bin.mkdir(parents=True, exist_ok=True)
+    download_table_git_repo(config=config)
     pass
     # os.makedirs(config.bin)
 def initialize_data(config: Config):
-    logger.info(f"startup$initialize_data: Creating {config.data}")
+    logger.info(f"$initialize_data: Creating {config.data}")
     config.data.mkdir(parents=True, exist_ok=True)
     init_database(config=config)
     initialize_assignment_table(config=config)
+
 
 
 def initialize_course(config: Config):
