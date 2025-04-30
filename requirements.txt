@@ -8,6 +8,7 @@ canvas-lms-api @ git+https://github.com/Mizzou-CS-Core/CanvasRequestLibrary.git
     # via
     #   -r requirements.in
     #   gen-assignment-window
+    #   mucs-database
 certifi==2025.4.26
     # via requests
 charset-normalizer==3.4.1
@@ -24,6 +25,8 @@ gitpython==3.1.44
     # via -r requirements.in
 idna==3.10
     # via requests
+mucs-database @ git+https://github.com/Mizzou-CS-Core/MUCSDao
+    # via -r requirements.in
 requests==2.32.3
     # via canvas-lms-api
 smmap==5.0.2
