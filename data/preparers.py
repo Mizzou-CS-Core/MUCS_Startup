@@ -1,8 +1,9 @@
 import logging
 from gen_assignment_window.gen_lab_window import initialize_window
 from configuration.config import Config
-from database.store_objects import store_mucs_course, store_canvas_course, get_cursor
 from git import Repo
+from canvas_lms_api import get_client
+import mucs_database.store_objects as dao
 logger = logging.getLogger(__name__)
 
 
@@ -15,6 +16,6 @@ def prepare_assignment_table(config: Config):
     gen_table.mkdir()
     initialize_window(cursor=cursor, config_path=gen_table, canvas_token=config.api_token, canvas_course_id=config.course_ids[0], canvas_assignment_name_predicate=canvas_assignment_name_predicate, canvas_assignment_phrase_blacklist=blacklist, mucs_course_code=config.class_code)
 def prepare_course_data(config: Config):
-    store_mucs_course(config=config)
+    dao.store_mucs_course()
     for course_id in config.course_ids:
-        store_canvas_course(config=config, course=config.canvas_client._courses.get_course(course_id=course_id))
+        dao.store_canvas_course(course=get_client()._courses.get_course(course_id=course_id))

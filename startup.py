@@ -4,13 +4,14 @@ import logging
 
 
 from configuration.config import Config
-from database.init import initialize_database
-from database.store_objects import store_canvas_course, store_mucs_course
 from data.preparers import prepare_assignment_table, prepare_course_data
 from utilities.git_util import download_git_repo
 from colorlog import ColoredFormatter
 
-from canvas_lms_api import CanvasClient, Course
+from mucs_database.init import initialize_database
+import mucs_database.store_objects as dao
+
+from canvas_lms_api import init as initialize_canvas_client
     
 def setup_logging():
     handler = logging.StreamHandler()
@@ -59,7 +60,8 @@ def main():
     if (config := Config.get_config()) is None:
         sys.exit("Missing configuration")
     initialize_directories(config=config)
-    initialize_database(config=config)
+    initialize_database(sqlite_db_path=config.sqlite_db_path, class_code=config.class_code)
+    initialize_canvas_client(url_base=config.api_prefix, token=config.api_token)
 
     prepare_data(config=config)
 
