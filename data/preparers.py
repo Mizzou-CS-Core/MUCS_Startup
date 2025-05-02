@@ -23,9 +23,12 @@ def prepare_assignment_table(config: Config):
 
 def prepare_grading_table(config: Config):
     logger.info("Preparing grading tables")
+    gen_table = config.data / "gen_grading_table"
+    logger.info(f"Config path is {gen_table}")
+    gen_table.mkdir()
     prepare_toml(mucsv2_instance_code=config.class_code, db_path=config.sqlite_db_path,
                  canvas_token=config.api_token, canvas_course_id=config.course_ids[0],
-                 canvas_url_base=config.api_prefix, roster_invalidation_days=3)
+                 canvas_url_base=config.api_prefix, roster_invalidation_days=3, config_base= gen_table, )
     for course_id in config.course_ids:
         generate_all_rosters(course_id)
 
