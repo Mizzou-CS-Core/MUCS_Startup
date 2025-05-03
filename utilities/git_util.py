@@ -1,4 +1,6 @@
-from configuration.config import Config
+from configuration.models import Config
+
+
 def download_git_repo(config: Config, path):
     url, branch = str(path).split('@')
     logger.info(f"$download_git_repo: Cloning {url}@{branch} into {config.bin!r}")
