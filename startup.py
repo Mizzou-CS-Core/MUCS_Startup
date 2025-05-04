@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 
 def initialize_bin_directory():
-    logger.debug(f"${initialize_bin_directory()}: Creating {config.bin}")
+    logger.debug(f"${initialize_bin_directory.__name__}: Creating {config.bin}")
     config.bin.mkdir(parents=True, exist_ok=True)
 
 
