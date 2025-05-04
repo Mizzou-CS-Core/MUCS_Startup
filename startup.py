@@ -58,7 +58,17 @@ def initialize_directories():
     initialize_data_directory()
 
 
+def sign_as_mucsv2_course():
+    logger.info("Signing course as MUCSv2 Enabled")
+    filename = config.base / "mucsv2.info"
+    logger.debug(f"{sign_as_mucsv2_course.__name__}: Creating file as {filename}")
+    filename.touch()
+    logger.debug(f"{sign_as_mucsv2_course.__name__}: Created file as {filename}")
+
+
 def prepare_data():
+    sign_as_mucsv2_course()
+
     prepare_course_data()
     prepare_assignment_table()
     prepare_grading_table()
