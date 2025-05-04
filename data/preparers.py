@@ -4,7 +4,9 @@ from gen_assignment_window.gen_assignment_window import prepare_toml as prepare_
 from gen_grader_table.grader_table import generate_all_rosters, prepare_toml as prepare_roster_toml
 from configuration.config import get_config
 from canvas_lms_api import get_client
-import mucs_database.store_objects as dao
+
+import mucs_database.mucsv2_course.accessors as dao_mucsv2_course
+import mucs_database.canvas_course.accessors as dao_canvas_course
 
 from data.download import download_script
 
@@ -43,7 +45,7 @@ def prepare_grading_table():
 
 def prepare_course_data():
     config = get_config()
-    dao.store_mucs_course()
+    dao_mucsv2_course.store_mucs_course()
     for course_id in config.course_ids:
-        dao.store_canvas_course(course=get_client().courses.get_course(course_id=course_id))
-
+        course = get_client().courses.get_course(course_id=course_id)
+        dao_canvas_course.store_canvas_course(canvas_id=course.id, name=course.original_name)
