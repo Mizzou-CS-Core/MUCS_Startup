@@ -47,19 +47,23 @@ logger = logging.getLogger(__name__)
 
 
 def initialize_bin_directory():
-    logger.debug(f"$initialize_bin_directory: Creating {config.bin}")
+    logger.debug(f"${initialize_bin_directory()}: Creating {config.bin}")
     config.bin.mkdir(parents=True, exist_ok=True)
-    # download_git_repo(config=config, path=config.githubpaths.gen_assignment_table)
 
 
 def initialize_data_directory():
-    logger.debug(f"$initialize_data_directory: Creating {config.data}")
+    logger.debug(f"${initialize_data_directory.__name__}: Creating {config.data}")
     config.data.mkdir(parents=True, exist_ok=True)
 
 
 def initialize_course_directory():
-    logger.debug(f"$initialize_course_directory: Creating {config.base}")
+    logger.debug(f"${initialize_course_directory.__name__}: Creating {config.base}")
     config.base.mkdir(parents=True, exist_ok=False)
+
+
+def initalize_submissions_directory():
+    logger.debug(f"${initalize_submissions_directory.__name__}: Creating {config.submissions}")
+    config.submissions.mkdir(parents=True, exist_ok=True)
 
 
 def initialize_directories():
@@ -67,6 +71,7 @@ def initialize_directories():
     initialize_course_directory()
     initialize_bin_directory()
     initialize_data_directory()
+    initalize_submissions_directory()
 
 
 def sign_as_mucsv2_course():
