@@ -16,7 +16,18 @@ config: Config
 
 
 def setup_logging():
-    handler = logging.StreamHandler()
+    # everything including debug goes to log file
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+
+    fh = logging.FileHandler("mucs_startup.log", encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s"
+    ))
+    # log info and above to console
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
     # this format string lets colorlog insert color around the whole line
     fmt = "%(log_color)s%(asctime)s [%(levelname)s] %(name)s: %(message)s"
     colors = {
@@ -26,10 +37,9 @@ def setup_logging():
         'ERROR': 'red',
         'CRITICAL': 'bold_red',
     }
-    handler.setFormatter(ColoredFormatter(fmt, log_colors=colors))
-    root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
-    root.addHandler(handler)
+    ch.setFormatter(ColoredFormatter(fmt, log_colors=colors))
+    root.addHandler(fh)
+    root.addHandler(ch)
 
 
 logger = logging.getLogger(__name__)
