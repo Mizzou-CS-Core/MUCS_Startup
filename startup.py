@@ -11,7 +11,6 @@ from data.preparers import (
     prepare_assignment_table,
     prepare_course_data,
     prepare_grading_table,
-    prepare_scripts
 )
 
 config: Config
@@ -80,9 +79,6 @@ def sign_as_mucsv2_course():
 
 def prepare_data():
     sign_as_mucsv2_course()
-
-    prepare_scripts()
-
     prepare_course_data()
     prepare_assignment_table()
     prepare_grading_table()

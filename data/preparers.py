@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 def prepare_assignment_table():
     config = get_config()
+    download_script(config.githubpaths.gen_assignment_table, "gen_assignment_table")
     canvas_assignment_name_predicate = input("Enter a canvas_assignment_name_predicate: ")
     blacklist = list(iter(lambda: input("Enter blacklist phrases (empty to stop): "), ""))
     gen_table = config.bin / "gen_assignment_table"
@@ -30,6 +31,7 @@ def prepare_assignment_table():
 def prepare_grading_table():
     config = get_config()
     logger.info("Preparing grading tables")
+    download_script(config.githubpaths.gen_grader_table, "gen_grader_table")
     gen_table = config.bin / "gen_grader_table"
     logger.info(f"Config path is {gen_table}")
     prepare_roster_toml(mucsv2_instance_code=config.class_code, db_path=config.sqlite_db_path,
@@ -45,8 +47,3 @@ def prepare_course_data():
     for course_id in config.course_ids:
         dao.store_canvas_course(course=get_client().courses.get_course(course_id=course_id))
 
-
-def prepare_scripts():
-    config = get_config()
-    download_script(config.githubpaths.gen_assignment_table, "gen_assignment_table")
-    download_script(config.githubpaths.gen_grader_table, "gen_grader_table")
