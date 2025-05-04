@@ -14,10 +14,9 @@ logger = logging.getLogger(__name__)
 def prepare_assignment_table():
     config = get_config()
     canvas_assignment_name_predicate = input("Enter a canvas_assignment_name_predicate: ")
-    blacklist = list(iter(lambda: input("Enter (empty to stop): "), ""))
-    gen_table = config.data / "gen_assignment_table"
+    blacklist = list(iter(lambda: input("Enter blacklist phrases (empty to stop): "), ""))
+    gen_table = config.bin / "gen_assignment_table"
     logger.info(f"Config path is {gen_table}")
-    gen_table.mkdir()
     prepare_assignment_toml(config_path=gen_table, canvas_token=config.api_token, canvas_course_id=config.course_ids[0],
                             canvas_assignment_name_predicate=canvas_assignment_name_predicate,
                             canvas_assignment_phrase_blacklist=blacklist, mucs_instance_code=config.class_code,
@@ -31,9 +30,8 @@ def prepare_assignment_table():
 def prepare_grading_table():
     config = get_config()
     logger.info("Preparing grading tables")
-    gen_table = config.data / "gen_grading_table"
+    gen_table = config.bin / "gen_grader_table"
     logger.info(f"Config path is {gen_table}")
-    gen_table.mkdir()
     prepare_roster_toml(mucsv2_instance_code=config.class_code, db_path=config.sqlite_db_path,
                         canvas_token=config.api_token, canvas_course_id=config.course_ids[0],
                         canvas_url_base=config.api_prefix, roster_invalidation_days=3, config_base=gen_table, )
