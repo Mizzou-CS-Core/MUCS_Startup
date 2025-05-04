@@ -31,8 +31,8 @@ class MUCSEnvBuilder(venv.EnvBuilder):
 
 def download_virtual_env(directory: Path):
     logger.debug(f"Creating virtual environment in {directory}")
-    builder = MUCSEnvBuilder(with_pip=True, name_repo=str(directory))
-    builder.create(directory)
+    builder = MUCSEnvBuilder(with_pip=True, name_repo=str(directory / ".venv"))
+    builder.create(directory / ".venv")
 
 
 def download_script(git_path: str, directory_name):
