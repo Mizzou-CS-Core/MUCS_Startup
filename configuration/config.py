@@ -70,7 +70,7 @@ def prepare_toml_doc():
         f.write(dumps(doc))
 
 
-def get_config():
+def get_config() -> Config:
     if _config is None:
         logger.error("The configuration file has not been loaded into memory!")
     return _config
