@@ -11,6 +11,9 @@ from data.preparers import (
     prepare_assignment_table,
     prepare_course_data,
     prepare_grading_table)
+from data.download import (
+    download_assignment_table_script
+)
 
 config: Config
 
@@ -84,6 +87,10 @@ def prepare_data():
     prepare_grading_table()
 
 
+def download_scripts():
+    download_assignment_table_script()
+
+
 def main():
     initialize_config()
     global config
@@ -94,6 +101,7 @@ def main():
     initialize_canvas_client(url_base=config.api_prefix, token=config.api_token)
 
     prepare_data()
+    download_scripts()
 
 
 if __name__ == "__main__":
