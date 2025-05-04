@@ -6,6 +6,8 @@ from configuration.config import get_config
 from canvas_lms_api import get_client
 import mucs_database.store_objects as dao
 
+from data.download import download_script
+
 logger = logging.getLogger(__name__)
 
 
@@ -44,3 +46,9 @@ def prepare_course_data():
     dao.store_mucs_course()
     for course_id in config.course_ids:
         dao.store_canvas_course(course=get_client().courses.get_course(course_id=course_id))
+
+
+def prepare_scripts():
+    config = get_config()
+    download_script(config.githubpaths.gen_assignment_table, "gen_assignment_table")
+    download_script(config.githubpaths.gen_grader_table, "gen_grader_table")

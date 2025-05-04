@@ -4,7 +4,6 @@ import sys
 import venv
 from pathlib import Path
 from utilities.git_util import download_git_repo
-from configuration.config import get_config
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,8 @@ class MUCSEnvBuilder(venv.EnvBuilder):
             raise FileNotFoundError(f"${self.name_repo}: {self.requirements_in} not found")
         logger.debug(f"${self.name_repo}: Compiling {self.requirements_in}")
         result = subprocess.run([sys.executable, "-m", "piptools", "compile",
-                        str(self.requirements_in), "--output-file", "requirements.txt"], capture_output=True, text=True)
+                                 str(self.requirements_in), "--output-file", "requirements.txt"], capture_output=True,
+                                text=True)
         python_exe = context.env_exe
         logger.debug(f"${self.name_repo}: Installing requirements.txt into {python_exe}")
         result = subprocess.run([python_exe, "-m", "pip", "install", "-r", "requirements.txt"],
@@ -35,10 +35,8 @@ def download_virtual_env(directory: Path):
     builder.create(directory)
 
 
-def download_assignment_table_script():
-    config = get_config()
-    logger.info(f"Downloading {config.githubpaths.gen_assignment_table}")
-    directory_name = "gen_assignment_table"
-    path = download_git_repo(config.githubpaths.gen_assignment_table, directory_name)
+def download_script(git_path: str, directory_name):
+    logger.info(f"Downloading {git_path}")
+    path = download_git_repo(github_path=git_path, directory_name=directory_name)
     logger.info(f"Creating virtual environment for {path}")
     download_virtual_env(directory=path)

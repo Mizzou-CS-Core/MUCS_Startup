@@ -10,9 +10,8 @@ from configuration.models import Config
 from data.preparers import (
     prepare_assignment_table,
     prepare_course_data,
-    prepare_grading_table)
-from data.download import (
-    download_assignment_table_script
+    prepare_grading_table,
+    prepare_scripts
 )
 
 config: Config
@@ -82,13 +81,11 @@ def sign_as_mucsv2_course():
 def prepare_data():
     sign_as_mucsv2_course()
 
+    prepare_scripts()
+
     prepare_course_data()
     prepare_assignment_table()
     prepare_grading_table()
-
-
-def download_scripts():
-    download_assignment_table_script()
 
 
 def main():
@@ -101,7 +98,6 @@ def main():
     initialize_canvas_client(url_base=config.api_prefix, token=config.api_token)
 
     prepare_data()
-    download_scripts()
 
 
 if __name__ == "__main__":
