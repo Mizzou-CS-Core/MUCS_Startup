@@ -8,10 +8,29 @@ from canvas_lms_api import get_client
 
 import mucs_database.mucsv2_course.accessors as dao_mucsv2_course
 import mucs_database.canvas_course.accessors as dao_canvas_course
+import mucs_database.grading_group.accessors as dao_grading_group
+import mucs_database.assignment.accessors as dao_assignment
 
 from data.download import download_script
 
 logger = logging.getLogger(__name__)
+
+
+def prepare_submissions():
+    logger.info("Preparing submissions directory")
+    assignment_dict = dao_assignment.get_assignments()
+    logger.debug(f"Assignment dict count: {len(assignment_dict)}")
+    grading_group_dict = dao_grading_group.get_grading_groups()
+    logger.debug(f"Grading group count: {len(grading_group_dict)}")
+    for assignment in assignment_dict:
+        assignment_dir = get_config().submissions / assignment['mucsv2_name']
+        logger.debug(f"Creating {assignment_dir}")
+        assignment_dir.mkdir(exist_ok=True, parents=True)
+        for grading_group in grading_group_dict:
+            group_dir = assignment_dir / grading_group['name']
+            logger.debug(f"Creating {group_dir}")
+            group_dir.mkdir(exist_ok=True, parents=True)
+    
 
 
 def prepare_assignment_table():
@@ -52,4 +71,4 @@ def prepare_course_data():
     dao_mucsv2_course.store_mucs_course()
     for course_id in config.course_ids:
         course = get_client().courses.get_course(course_id=course_id)
-        dao_canvas_course.store_canvas_course(canvas_id=course.id, name=course.original_name)
+        dao_canvas_course.store_canvas_course(canvas_id=course.id, name=course.course_code)
