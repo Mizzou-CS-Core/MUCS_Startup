@@ -20,6 +20,6 @@ class Config:
         self.api_token = api_token
         self.course_ids = course_ids
         self.sqlite_db = self.class_code if sqlite_db == "" else sqlite_db
-        self.sqlite_db_path = f"{self.data}/{self.sqlite_db}.db"
+        self.sqlite_db_path = self.data / self.sqlite_db
         self.githubpaths = githubpaths
         self.test_files = test_files
