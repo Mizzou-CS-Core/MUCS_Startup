@@ -3,6 +3,7 @@ from colorama import Fore, Style
 from gen_assignment_window.gen_assignment_window import prepare_toml as prepare_assignment_toml, \
     prepare_assignment_window
 from gen_grader_table.grader_table import generate_all_rosters, prepare_toml as prepare_roster_toml
+from mucsmake.configuration.config import prepare_toml_doc as prepare_mucsmake_toml
 from configuration.config import get_config
 from canvas_lms_api import get_client
 
@@ -30,7 +31,19 @@ def prepare_submissions():
             group_dir = assignment_dir / grading_group['name']
             logger.debug(f"Creating {group_dir}")
             group_dir.mkdir(exist_ok=True, parents=True)
-    
+
+
+def prepare_test_files():
+    logger.info("Preparing test files directory")
+    assignment_dict = dao_assignment.get_assignments()
+    logger.debug(f"Assignment dict count: {len(assignment_dict)}")
+    test_files_dir = get_config().data / "test_files"
+    logger.debug(f"Creating {test_files_dir}")
+    test_files_dir.mkdir(exist_ok=True, parents=True)
+    for assignment in assignment_dict:
+        file_dir = test_files_dir / assignment['mucsv2_name']
+        logger.debug(f"Creating {file_dir}")
+        file_dir.mkdir(exist_ok=True, parents=True)
 
 
 def prepare_assignment_table():
@@ -50,6 +63,19 @@ def prepare_assignment_table():
         prepare_assignment_window(canvas_course_id=course_id,
                                   canvas_assignment_name_predicate=canvas_assignment_name_predicate,
                                   canvas_assignment_phrase_blacklist=blacklist)
+
+
+def prepare_mucsmake():
+    config = get_config()
+    name = "mucsmake"
+    logger.info(f"Preparing a standalone copy of {name}. This may take a while!")
+    download_script(config.githubpaths.mucsmake, directory_name=name)
+    mucsmake = config.bin / name
+    logger.debug(f"Config path is {mucsmake}")
+    prepare_mucsmake_toml(mucsv2_instance_code=config.class_code, check_lab_header=True,
+                          run_valgrind=True, base_path=config.base,
+                          db_path=config.sqlite_db_path, lab_submission_directory=config.submissions,
+                          test_files_directory=config.test_files)
 
 
 def prepare_grading_table():

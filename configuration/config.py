@@ -95,14 +95,8 @@ def initialize_config():
     github = GitHubPaths(gen_grader_table=github_repos.get('gen_grader_table'), mucsmake=github_repos.get('mucsmake'),
                          gen_assignment_table=github_repos.get('gen_assignment_table'))
 
-    _config = Config(
-        class_code=general.get('class_code', ''),
-        bin=paths.get('bin', 'bin'),
-        data=paths.get('data', 'data'),
-        submissions=paths.get('submissions', ''),
-        api_prefix=canvas.get('api_prefix', ''),
-        api_token=canvas.get('api_token', ''),
-        course_ids=canvas.get('course_ids', []),
-        sqlite_db=general.get('sqlite_db', ''),
-        githubpaths=github
-    )
+    _config = Config(class_code=general.get('class_code', ''), bin=paths.get('bin', 'bin'),
+                     data=paths.get('data', 'data'), submissions=paths.get('submissions', ''),
+                     api_prefix=canvas.get('api_prefix', ''), api_token=canvas.get('api_token', ''),
+                     course_ids=canvas.get('course_ids', []), sqlite_db=general.get('sqlite_db', ''),
+                     githubpaths=github)

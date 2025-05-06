@@ -12,6 +12,8 @@ from data.preparers import (
     prepare_course_data,
     prepare_grading_table,
     prepare_submissions,
+    prepare_test_files,
+    prepare_mucsmake
 )
 
 config: Config
@@ -89,6 +91,8 @@ def prepare_data():
     prepare_assignment_table()
     prepare_grading_table()
     prepare_submissions()
+    prepare_mucsmake()
+    prepare_test_files()
 
 
 def main():

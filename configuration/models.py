@@ -9,7 +9,8 @@ class GitHubPaths:
 
 
 class Config:
-    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str, course_ids: list, sqlite_db: str, githubpaths: GitHubPaths):
+    def __init__(self, class_code: str, bin: str, data: str, submissions: str, api_prefix: str, api_token: str,
+                 course_ids: list, sqlite_db: str, githubpaths: GitHubPaths, test_files=""):
         self.base = Path('/', 'cluster', 'pixstor', 'class', class_code)
         self.class_code = class_code
         self.bin = self.base / bin
@@ -21,3 +22,4 @@ class Config:
         self.sqlite_db = self.class_code if sqlite_db == "" else sqlite_db
         self.sqlite_db_path = f"{self.data}/{self.sqlite_db}.db"
         self.githubpaths = githubpaths
+        self.test_files = test_files
