@@ -62,8 +62,8 @@ def prepare_toml_doc():
         "forks/different versions. "))
     github_repos.add(comment("GenGraderTable"))
     github_repos.add("gen_grader_table", "https://github.com/Mizzou-CS-Core/GenGraderTable.git@sql_integration")
-    github_repos.add("mucsmake", "https://github.com/Mizzou-CS-Core/MUCSMake.git")
-    github_repos.add("gen_assignment_table", "https://github.com/Mizzou-CS-Core/LabWindowGen.git")
+    github_repos.add("mucsmake", "https://github.com/Mizzou-CS-Core/MUCSMake.git@sql_integration")
+    github_repos.add("gen_assignment_table", "https://github.com/Mizzou-CS-Core/LabWindowGen.git@sql-integration")
     doc['github_repos'] = github_repos
 
     with open("config.toml", 'w') as f:

@@ -99,7 +99,8 @@ def main():
     initialize_config()
     global config
     if (config := get_config()) is None:
-        sys.exit("Missing configuration")
+        logger.critical("Please fill out the config.toml.")
+        sys.exit()
     initialize_directories()
     initialize_database(sqlite_db_path=config.sqlite_db_path, mucsv2_instance_code=config.class_code)
     initialize_canvas_client(url_base=config.api_prefix, token=config.api_token)

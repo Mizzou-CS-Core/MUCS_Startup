@@ -58,7 +58,7 @@ def prepare_assignment_table():
     prepare_assignment_toml(config_path=gen_table, canvas_token=config.api_token, canvas_course_id=config.course_ids[0],
                             canvas_assignment_name_predicate=canvas_assignment_name_predicate,
                             canvas_assignment_phrase_blacklist=blacklist, mucs_instance_code=config.class_code,
-                            sqlite3_path=config.sqlite_db_path)
+                            sqlite3_path=str(config.sqlite_db_path))
     for course_id in config.course_ids:
         prepare_assignment_window(canvas_course_id=course_id,
                                   canvas_assignment_name_predicate=canvas_assignment_name_predicate,
@@ -73,9 +73,9 @@ def prepare_mucsmake():
     mucsmake = config.bin / name
     logger.debug(f"Config path is {mucsmake}")
     prepare_mucsmake_toml(mucsv2_instance_code=config.class_code, check_lab_header=True,
-                          run_valgrind=True, base_path=config.base,
-                          db_path=config.sqlite_db_path, lab_submission_directory=config.submissions,
-                          test_files_directory=config.test_files)
+                          run_valgrind=True, base_path=str(config.base),
+                          db_path=str(config.sqlite_db_path), lab_submission_directory=str(config.submissions),
+                          test_files_directory=str(config.test_files), config_path=mucsmake)
 
 
 def prepare_grading_table():
@@ -85,7 +85,7 @@ def prepare_grading_table():
     download_script(config.githubpaths.gen_grader_table, directory_name=name)
     gen_table = config.bin / name
     logger.debug(f"Config path is {gen_table}")
-    prepare_roster_toml(mucsv2_instance_code=config.class_code, db_path=config.sqlite_db_path,
+    prepare_roster_toml(mucsv2_instance_code=config.class_code, db_path=str(config.sqlite_db_path),
                         canvas_token=config.api_token, canvas_course_id=config.course_ids[0],
                         canvas_url_base=config.api_prefix, roster_invalidation_days=3, config_base=gen_table, )
     for course_id in config.course_ids:
