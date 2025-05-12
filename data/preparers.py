@@ -44,6 +44,9 @@ def prepare_test_files():
         file_dir = test_files_dir / assignment['mucsv2_name']
         logger.debug(f"Creating {file_dir}")
         file_dir.mkdir(exist_ok=True, parents=True)
+        dao_assignment.upsert_assignment(mucsv2_name=assignment['mucsv2_name'], due_at=assignment['due_at'],
+                                         test_file_directory_path=str(file_dir),
+                                         canvas_id=assignment['canvas_id'])
 
 
 def prepare_assignment_table():
